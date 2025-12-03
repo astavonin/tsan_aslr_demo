@@ -15,12 +15,10 @@ all: $(BINARY_PIE) $(BINARY_NO_PIE)
 # Build with PIE (default, will likely fail with TSan on high ASLR systems)
 $(BINARY_PIE): simple_test.cpp
 	$(CXX) $(CXXFLAGS) $(TSAN_FLAGS) $(TSAN_LDFLAGS) -o $@ $<
-	@echo "Built: $@ (PIE enabled)"
 
 # Build without PIE (helps but may not be sufficient)
 $(BINARY_NO_PIE): simple_test.cpp
 	$(CXX) $(CXXFLAGS) $(TSAN_FLAGS) -fno-PIE $(TSAN_LDFLAGS) -no-pie -o $@ $<
-	@echo "Built: $@ (PIE disabled)"
 
 # Check current ASLR settings
 check-env:
@@ -41,17 +39,14 @@ check-env:
 
 # Run with PIE (likely to fail)
 run-pie: $(BINARY_PIE)
-	@echo "=== Running WITH PIE (may fail with 'unexpected memory mapping') ==="
 	./$(BINARY_PIE) || echo "Exit code: $$?"
 
 # Run without PIE (may still fail)
 run-nopie: $(BINARY_NO_PIE)
-	@echo "=== Running WITHOUT PIE (may still fail) ==="
 	./$(BINARY_NO_PIE) || echo "Exit code: $$?"
 
 # Run with setarch workaround (should work)
 run-setarch: $(BINARY_NO_PIE)
-	@echo "=== Running with setarch -R (ASLR disabled for this process) ==="
 	setarch $$(uname -m) -R ./$(BINARY_NO_PIE) || echo "Exit code: $$?"
 
 # Run all scenarios
