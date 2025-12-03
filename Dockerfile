@@ -14,6 +14,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         clang-14 \
         libclang-rt-14-dev \
+        llvm-14 \
         make \
         util-linux \
         ca-certificates \
@@ -36,3 +37,5 @@ RUN groupadd -g 1000 -o builder && \
 
 USER builder
 WORKDIR /workspace
+
+ENV TSAN_OPTIONS="symbolize=1:external_symbolizer_path=/usr/lib/llvm-14/bin/llvm-symbolizer"

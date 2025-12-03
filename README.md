@@ -32,6 +32,7 @@ Or use Docker:
 ```bash
 ./docker-build.sh
 ./docker-make.sh build
+./docker-make.sh --setarch run-pie  # Run with ASLR disabled
 ```
 
 ## Files
