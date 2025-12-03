@@ -13,9 +13,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         clang-14 \
+        libclang-rt-14-dev \
         make \
         util-linux \
-        ca-certificates && \
+        ca-certificates \
+        sudo && \
     ln -s /usr/bin/clang-14 /usr/bin/clang && \
     ln -s /usr/bin/clang++-14 /usr/bin/clang++ && \
     apt-get clean && \
@@ -26,5 +28,11 @@ RUN clang++ --version && \
     make --version && \
     setarch --version
 
-# Set working directory
-WORKDIR /demo
+RUN groupadd -g 1000 -o builder && \
+    useradd -u 1000 -g 1000 -o --create-home --shell /bin/bash builder && \
+    usermod -aG sudo builder && \
+    echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/builder && \
+    chmod 0440 /etc/sudoers.d/builder
+
+USER builder
+WORKDIR /workspace

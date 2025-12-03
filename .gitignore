@@ -1,0 +1,19 @@
+# Build artifacts
+simple_test
+simple_test_pie
+simple_test_nopie
+*.o
+*.a
+*.so
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.session.vim
+
+# OS
+.DS_Store
+Thumbs.db
